@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bookmark Organizer - Configuracion</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="settings-page">
+    <h1>Configuracion</h1>
+
+    <!-- Category order -->
+    <div class="section">
+      <h2>Orden de categorias</h2>
+      <p class="hint">Arrastra para reordenar. Los marcadores se agrupan segun este orden de prioridad.</p>
+      <ul id="category-order-list" class="sortable-list"></ul>
+    </div>
+
+    <!-- Add / Edit category -->
+    <div class="section">
+      <h2 id="form-title">Agregar categoria</h2>
+      <div class="form-grid">
+        <div class="form-field">
+          <label for="cat-name">Nombre</label>
+          <input type="text" id="cat-name" placeholder="Ej: Google Drive">
+        </div>
+        <div class="form-field">
+          <label for="cat-id">ID (unico)</label>
+          <input type="text" id="cat-id" placeholder="Ej: gdrive">
+        </div>
+        <div class="form-field full-width">
+          <label for="cat-patterns">Patrones de URL <span class="hint-inline">(uno por linea, texto o regex)</span></label>
+          <textarea id="cat-patterns" rows="3" placeholder="drive\.google\.com&#10;ejemplo\.com/docs"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button id="add-cat-btn" class="primary">Agregar</button>
+        <button id="cancel-edit-btn" class="hidden">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- Sort within groups -->
+    <div class="section">
+      <h2>Orden dentro de cada grupo</h2>
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="sortWithin" value="alpha" checked>
+          Alfabetico (A-Z)
+        </label>
+        <label>
+          <input type="radio" name="sortWithin" value="original">
+          Mantener orden original
+        </label>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="save-btn" class="primary">Guardar todo</button>
+      <button id="reset-btn">Restablecer defaults</button>
+    </div>
+
+    <div id="status" class="hidden"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>
