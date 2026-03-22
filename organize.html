@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bookmark Organizer - Organizar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="organize-page">
+    <h1 id="page-title">Organizar marcadores</h1>
+    <p id="page-desc" class="hint"></p>
+
+    <div class="organize-controls">
+      <div class="section">
+        <label for="o-folder-select">Carpeta:</label>
+        <select id="o-folder-select">
+          <option value="">-- Cargando carpetas --</option>
+        </select>
+      </div>
+
+      <div class="organize-actions-bar">
+        <button id="preview-btn" class="primary" disabled>Vista previa</button>
+        <button id="apply-btn" class="primary" disabled>Aplicar</button>
+      </div>
+    </div>
+
+    <div id="preview-section" class="hidden">
+      <div class="preview-header">
+        <h2>Vista previa</h2>
+        <span id="total-count" class="count-info"></span>
+      </div>
+      <div id="category-list"></div>
+    </div>
+
+    <div id="organize-status" class="hidden"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="organize.js"></script>
+</body>
+</html>

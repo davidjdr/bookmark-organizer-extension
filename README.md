@@ -1,17 +1,36 @@
 # Bookmark Organizer
 
-Chrome extension to organize, sort, and verify your bookmarks. Categorize by type, detect broken links, and clean up redirections.
+Chrome extension to organize, browse, and verify your bookmarks. Each tool opens in its own dedicated tab for a full-page experience.
 
 ## Features
 
-### Organize by type
+The extension popup acts as a launcher with four tools:
 
-Two modes for sorting bookmarks within a folder:
+### Sort in place
 
-- **Sort in place** — Reorders bookmarks grouping them by type without creating subfolders. For example: `docA, video1, docB` becomes `docA, docB, video1`.
-- **Group into subfolders** — Creates subfolders by type (Documents, Videos, Repos, etc.) and moves bookmarks into them.
+Reorders bookmarks within the same folder, grouping them by type without creating subfolders. For example: `docA, video1, docB` becomes `docA, docB, video1`.
 
-Existing subfolders are always moved to the top, preserving their original order.
+### Group into subfolders
+
+Creates subfolders by type (Documents, Videos, Repos, etc.) and moves bookmarks into them.
+
+Both organization modes move existing subfolders to the top, preserving their original order. Each opens in a dedicated tab where you select a folder, preview the result, and apply.
+
+### Browse by date
+
+Opens a dedicated tab to view all bookmarks in a folder sorted by creation date (newest or oldest first). Each entry shows its title, creation date, and a clickable URL. Select individual bookmarks or all at once to delete in bulk.
+
+### Verify links
+
+Scans bookmarks to find broken links and redirections. Opens in a dedicated tab with:
+
+- **Detect broken links** — finds bookmarks returning 404, 410, or connection errors
+- **Detect redirections** — finds bookmarks returning 301/302 with the destination URL
+- **Selective deletion** — check individual bookmarks or select all, then delete in bulk
+- **Clickable URLs** — click any URL in the results to verify it manually in a new tab
+- **Progress bar** with live counter of issues found
+- **Stop button** to cancel a scan in progress
+- Requests that return 403 (authentication required) are excluded since the resource likely exists but requires login
 
 ### Smart categorization
 
@@ -38,7 +57,7 @@ When a URL matches multiple categories, the **most specific pattern wins** — s
 
 ### Custom categories
 
-From the settings page (gear icon) you can:
+From the settings page (gear icon in the popup) you can:
 
 - **Add** new categories with custom name and URL patterns (plain text or regex)
 - **Edit** or **delete** any category, including the defaults
@@ -46,18 +65,6 @@ From the settings page (gear icon) you can:
 - **Choose sorting within groups** — alphabetical (A-Z) or keep original order
 
 Display order and matching priority are independent, so reordering categories never breaks the classification logic.
-
-### Verify links
-
-Opens in a dedicated tab so results persist even if you navigate away. Features:
-
-- **Detect broken links** — finds bookmarks returning 404, 410, or connection errors
-- **Detect redirections** — finds bookmarks returning 301/302 with the destination URL
-- **Selective deletion** — check individual bookmarks or select all, then delete in bulk
-- **Clickable URLs** — click any URL in the results to verify it manually in a new tab
-- **Progress bar** with live counter of issues found
-- **Stop button** to cancel a scan in progress
-- Requests that return 403 (authentication required) are excluded from results since the resource likely exists but requires login
 
 ## Installation
 
@@ -69,21 +76,10 @@ Opens in a dedicated tab so results persist even if you navigate away. Features:
 
 ## Usage
 
-### Organizing
-
-1. Click the extension icon in the toolbar
-2. Select a bookmark folder from the dropdown
-3. Choose a mode: **Sort in place** or **Group into subfolders**
-4. Click **Preview** to see how bookmarks will be organized
-5. Click **Apply** to execute
-
-### Verifying
-
-1. Click **"Verify broken links and redirections"** at the bottom of the popup
-2. A new tab opens with the verification tool
-3. Select a folder and check which types to scan (404, redirections, or both)
-4. Click **Scan** and wait for results
-5. Review, click URLs to verify manually, then select and delete the ones you want to remove
+1. Click the extension icon in the toolbar — a launcher popup appears with four options
+2. Click any option to open it in a dedicated tab
+3. In the tab, select a bookmark folder and use the tool
+4. To configure categories or sorting preferences, click the gear icon in the popup
 
 ## Permissions
 

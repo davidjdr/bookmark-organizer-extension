@@ -5,54 +5,36 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="container">
+  <div class="launcher">
     <div class="header">
       <h1>Bookmark Organizer</h1>
       <button id="settings-btn" class="icon-btn" title="Configuracion">&#9881;</button>
     </div>
 
-    <div class="section">
-      <label for="folder-select">Carpeta:</label>
-      <select id="folder-select">
-        <option value="">-- Cargando carpetas --</option>
-      </select>
+    <div class="launcher-grid">
+      <button class="launcher-btn" data-page="organize.html?mode=sort">
+        <span class="launcher-icon">&#8645;</span>
+        <span class="launcher-label">Ordenar en sitio</span>
+        <span class="launcher-desc">Agrupa por tipo sin crear subcarpetas</span>
+      </button>
+      <button class="launcher-btn" data-page="organize.html?mode=group">
+        <span class="launcher-icon">&#128193;</span>
+        <span class="launcher-label">Agrupar en subcarpetas</span>
+        <span class="launcher-desc">Crea subcarpetas por tipo</span>
+      </button>
+      <button class="launcher-btn" data-page="browse.html">
+        <span class="launcher-icon">&#128197;</span>
+        <span class="launcher-label">Explorar por fecha</span>
+        <span class="launcher-desc">Ver marcadores ordenados por fecha</span>
+      </button>
+      <button class="launcher-btn" data-page="verify.html">
+        <span class="launcher-icon">&#128269;</span>
+        <span class="launcher-label">Verificar enlaces</span>
+        <span class="launcher-desc">Detectar rotos y redirecciones</span>
+      </button>
     </div>
-
-    <div class="section">
-      <label>Modo de organizacion:</label>
-      <div class="mode-selector">
-        <button class="mode-btn active" data-mode="sort">
-          <span class="mode-icon">&#8645;</span>
-          <span class="mode-label">Ordenar en sitio</span>
-          <span class="mode-desc">Agrupa por tipo sin mover a subcarpetas</span>
-        </button>
-        <button class="mode-btn" data-mode="group">
-          <span class="mode-icon">&#128193;</span>
-          <span class="mode-label">Agrupar en subcarpetas</span>
-          <span class="mode-desc">Crea subcarpetas por tipo y mueve los marcadores</span>
-        </button>
-      </div>
-    </div>
-
-    <div id="preview" class="section hidden">
-      <h2>Vista previa</h2>
-      <div id="category-list"></div>
-      <p class="count-info">Total: <span id="total-count">0</span></p>
-    </div>
-
-    <div class="actions">
-      <button id="preview-btn" disabled>Vista previa</button>
-      <button id="organize-btn" class="primary" disabled>Aplicar</button>
-    </div>
-
-    <div id="status" class="hidden"></div>
-
-    <hr class="divider">
-
-    <button id="verify-btn" class="full-btn">&#128269; Verificar enlaces rotos y redirecciones</button>
   </div>
 
-  <script src="shared.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

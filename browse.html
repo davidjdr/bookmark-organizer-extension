@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bookmark Organizer - Explorar por fecha</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="browse-page">
+    <h1>Explorar marcadores por fecha</h1>
+    <p class="hint">Visualiza los marcadores de una carpeta ordenados por fecha de creacion.</p>
+
+    <div class="browse-controls">
+      <div class="section">
+        <label for="b-folder-select">Carpeta:</label>
+        <select id="b-folder-select">
+          <option value="">-- Cargando carpetas --</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Orden:</label>
+        <div class="check-options">
+          <label class="check-label">
+            <input type="radio" name="sortDir" value="desc" checked>
+            Mas recientes primero
+          </label>
+          <label class="check-label">
+            <input type="radio" name="sortDir" value="asc">
+            Mas antiguos primero
+          </label>
+        </div>
+      </div>
+
+      <div class="browse-actions-bar">
+        <button id="load-btn" class="primary" disabled>Cargar</button>
+      </div>
+    </div>
+
+    <div id="browse-results" class="hidden">
+      <div class="results-toolbar">
+        <label class="check-label">
+          <input type="checkbox" id="select-all">
+          Seleccionar todos
+        </label>
+        <span id="results-count" class="count-info"></span>
+        <button id="delete-selected-btn" class="danger btn-sm" disabled>Eliminar seleccionados</button>
+      </div>
+
+      <div id="results-list"></div>
+    </div>
+
+    <div id="browse-status" class="hidden"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="browse.js"></script>
+</body>
+</html>
