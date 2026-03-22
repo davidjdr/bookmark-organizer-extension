@@ -7,6 +7,7 @@ let categories = [];
 let categoryOrder = [];
 let currentGroups = {};
 let currentFolders = [];
+let currentSortedBookmarks = []; // for date-based sorting
 
 // --- DOM ---
 const pageTitle = document.getElementById("page-title");
@@ -18,6 +19,8 @@ const previewSection = document.getElementById("preview-section");
 const categoryList = document.getElementById("category-list");
 const totalCount = document.getElementById("total-count");
 const statusDiv = document.getElementById("organize-status");
+const sortCriteriaSection = document.getElementById("sort-criteria-section");
+const sortCriteriaRadios = document.querySelectorAll('input[name="sortCriteria"]');
 
 // --- Configure page based on mode ---
 
@@ -26,7 +29,13 @@ if (mode === "group") {
   pageDesc.textContent = "Crea subcarpetas por tipo y mueve los marcadores dentro de ellas.";
 } else {
   pageTitle.textContent = "Ordenar en sitio";
-  pageDesc.textContent = "Reordena los marcadores dentro de la misma carpeta, agrupandolos por tipo.";
+  pageDesc.textContent = "Reordena los marcadores dentro de la misma carpeta.";
+  sortCriteriaSection.classList.remove("hidden");
+}
+
+function getSortCriteria() {
+  const checked = document.querySelector('input[name="sortCriteria"]:checked');
+  return checked ? checked.value : "category";
 }
 
 // --- Helpers ---
@@ -101,19 +110,10 @@ async function showPreview() {
   currentFolders = children.filter((n) => n.children !== undefined && !n.url);
   const bookmarks = children.filter((n) => n.url);
 
-  currentGroups = groupBookmarks(bookmarks);
-
-  for (const catId of Object.keys(currentGroups)) {
-    if (sortWithin === "alpha") {
-      currentGroups[catId].sort((a, b) =>
-        (a.title || "").localeCompare(b.title || "")
-      );
-    }
-  }
-
-  const sortedIds = getSortedCategoryIds(currentGroups);
+  const criteria = getSortCriteria();
   categoryList.innerHTML = "";
 
+  // Render folders first
   if (currentFolders.length > 0) {
     const div = document.createElement("div");
     div.className = "category";
@@ -131,21 +131,63 @@ async function showPreview() {
     categoryList.appendChild(div);
   }
 
-  for (const catId of sortedIds) {
-    const items = currentGroups[catId];
-    const catName = getCategoryName(catId, categories);
+  if (criteria === "category" || mode === "group") {
+    // --- Category-based ---
+    currentGroups = groupBookmarks(bookmarks);
+    currentSortedBookmarks = [];
+
+    for (const catId of Object.keys(currentGroups)) {
+      if (sortWithin === "alpha") {
+        currentGroups[catId].sort((a, b) =>
+          (a.title || "").localeCompare(b.title || "")
+        );
+      }
+    }
+
+    const sortedIds = getSortedCategoryIds(currentGroups);
+
+    for (const catId of sortedIds) {
+      const items = currentGroups[catId];
+      const catName = getCategoryName(catId, categories);
+      const div = document.createElement("div");
+      div.className = "category";
+      const header = document.createElement("div");
+      header.className = "category-header";
+      const suffix = mode === "group" ? " \u2192 subcarpeta" : "";
+      header.textContent = `${catName} (${items.length})${suffix}`;
+      div.appendChild(header);
+      const ul = document.createElement("ul");
+      for (const bm of items) {
+        const li = document.createElement("li");
+        li.title = bm.url;
+        li.textContent = bm.title || bm.url;
+        ul.appendChild(li);
+      }
+      div.appendChild(ul);
+      categoryList.appendChild(div);
+    }
+  } else {
+    // --- Date-based ---
+    currentGroups = {};
+    const asc = criteria === "date-asc";
+    currentSortedBookmarks = [...bookmarks].sort((a, b) => {
+      const da = a.dateAdded || 0;
+      const db = b.dateAdded || 0;
+      return asc ? da - db : db - da;
+    });
+
     const div = document.createElement("div");
     div.className = "category";
     const header = document.createElement("div");
     header.className = "category-header";
-    const suffix = mode === "group" ? " \u2192 subcarpeta" : "";
-    header.textContent = `${catName} (${items.length})${suffix}`;
+    header.textContent = asc ? "Mas antiguos primero" : "Mas recientes primero";
     div.appendChild(header);
     const ul = document.createElement("ul");
-    for (const bm of items) {
+    for (const bm of currentSortedBookmarks) {
       const li = document.createElement("li");
       li.title = bm.url;
-      li.textContent = bm.title || bm.url;
+      const date = bm.dateAdded ? formatDate(bm.dateAdded) : "";
+      li.textContent = `${date}  ${bm.title || bm.url}`;
       ul.appendChild(li);
     }
     div.appendChild(ul);
@@ -155,6 +197,14 @@ async function showPreview() {
   totalCount.textContent = `${bookmarks.length} marcadores, ${currentFolders.length} carpetas`;
   previewSection.classList.remove("hidden");
   applyBtn.disabled = false;
+}
+
+function formatDate(timestamp) {
+  const d = new Date(timestamp);
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}/${month}/${year}`;
 }
 
 // --- Apply ---
@@ -173,9 +223,10 @@ async function apply() {
       await chrome.bookmarks.move(folder.id, { parentId: folderId });
     }
 
-    const sortedIds = getSortedCategoryIds(currentGroups);
+    const criteria = getSortCriteria();
 
     if (mode === "group") {
+      const sortedIds = getSortedCategoryIds(currentGroups);
       for (const catId of sortedIds) {
         const bookmarks = currentGroups[catId];
         const catName = getCategoryName(catId, categories);
@@ -184,19 +235,27 @@ async function apply() {
           await chrome.bookmarks.move(bm.id, { parentId: subfolder.id });
         }
       }
-    } else {
+      const catCount = Object.keys(currentGroups).length;
+      const bmCount = Object.values(currentGroups).flat().length;
+      showMsg(`Listo: ${bmCount} marcadores organizados en ${catCount} subcarpetas.`, "success");
+    } else if (criteria === "category") {
+      const sortedIds = getSortedCategoryIds(currentGroups);
       for (const catId of sortedIds) {
         for (const bm of currentGroups[catId]) {
           await chrome.bookmarks.move(bm.id, { parentId: folderId });
         }
       }
+      const bmCount = Object.values(currentGroups).flat().length;
+      showMsg(`Listo: ${bmCount} marcadores ordenados por tipo.`, "success");
+    } else {
+      for (const bm of currentSortedBookmarks) {
+        await chrome.bookmarks.move(bm.id, { parentId: folderId });
+      }
+      showMsg(`Listo: ${currentSortedBookmarks.length} marcadores ordenados por fecha.`, "success");
     }
 
-    const catCount = Object.keys(currentGroups).length;
-    const bmCount = Object.values(currentGroups).flat().length;
-    const modeText = mode === "group" ? `en ${catCount} subcarpetas` : `por ${catCount} tipos`;
-    showMsg(`Listo: ${bmCount} marcadores organizados ${modeText}.`, "success");
     currentGroups = {};
+    currentSortedBookmarks = [];
     applyBtn.disabled = true;
   } catch (err) {
     showMsg(`Error: ${err.message}`, "error");

@@ -18,6 +18,24 @@
         </select>
       </div>
 
+      <div id="sort-criteria-section" class="section hidden">
+        <label>Ordenar por:</label>
+        <div class="check-options">
+          <label class="check-label">
+            <input type="radio" name="sortCriteria" value="category" checked>
+            Categoria
+          </label>
+          <label class="check-label">
+            <input type="radio" name="sortCriteria" value="date-desc">
+            Fecha (recientes primero)
+          </label>
+          <label class="check-label">
+            <input type="radio" name="sortCriteria" value="date-asc">
+            Fecha (antiguos primero)
+          </label>
+        </div>
+      </div>
+
       <div class="organize-actions-bar">
         <button id="preview-btn" class="primary" disabled>Vista previa</button>
         <button id="apply-btn" class="primary" disabled>Aplicar</button>

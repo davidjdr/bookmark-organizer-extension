@@ -8,7 +8,11 @@ The extension popup acts as a launcher with four tools:
 
 ### Sort in place
 
-Reorders bookmarks within the same folder, grouping them by type without creating subfolders. For example: `docA, video1, docB` becomes `docA, docB, video1`.
+Reorders bookmarks within the same folder. Choose the sorting criteria:
+
+- **By category** — groups bookmarks by type. For example: `docA, video1, docB` becomes `docA, docB, video1`.
+- **By date (newest first)** — most recently added bookmarks at the top.
+- **By date (oldest first)** — oldest bookmarks at the top.
 
 ### Group into subfolders
 
