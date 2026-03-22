@@ -141,6 +141,10 @@ async function showPreview() {
         currentGroups[catId].sort((a, b) =>
           (a.title || "").localeCompare(b.title || "")
         );
+      } else if (sortWithin === "date-desc") {
+        currentGroups[catId].sort((a, b) => (b.dateAdded || 0) - (a.dateAdded || 0));
+      } else if (sortWithin === "date-asc") {
+        currentGroups[catId].sort((a, b) => (a.dateAdded || 0) - (b.dateAdded || 0));
       }
     }
 

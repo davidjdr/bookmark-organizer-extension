@@ -66,7 +66,7 @@ From the settings page (gear icon in the popup) you can:
 - **Add** new categories with custom name and URL patterns (plain text or regex)
 - **Edit** or **delete** any category, including the defaults
 - **Drag and drop** to reorder display priority
-- **Choose sorting within groups** — alphabetical (A-Z) or keep original order
+- **Choose sorting within groups** — alphabetical (A-Z), keep original order, by date newest first, or by date oldest first
 
 Display order and matching priority are independent, so reordering categories never breaks the classification logic.
 
