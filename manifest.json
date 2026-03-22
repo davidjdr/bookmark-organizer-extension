@@ -1,9 +1,10 @@
 {
   "manifest_version": 3,
-  "name": "Bookmark Organizer by Type",
-  "version": "2.0.0",
-  "description": "Organiza los marcadores de una carpeta por tipo: ordena en sitio o agrupa en subcarpetas.",
+  "name": "Bookmark Organizer",
+  "version": "3.0.0",
+  "description": "Organiza y verifica marcadores: ordena por tipo, detecta enlaces rotos y redirecciones.",
   "permissions": ["bookmarks", "storage"],
+  "host_permissions": ["<all_urls>"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {

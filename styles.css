@@ -14,8 +14,8 @@ body {
 /* --- Popup --- */
 
 .container {
-  width: 400px;
-  max-height: 540px;
+  width: 420px;
+  max-height: 560px;
   overflow-y: auto;
   padding: 16px;
 }
@@ -169,6 +169,238 @@ button.primary {
 
 button.primary:hover:not(:disabled) {
   background: #2563eb;
+}
+
+button.danger {
+  background: #ef4444;
+  color: #fff;
+  border-color: #ef4444;
+}
+
+button.danger:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+button.btn-sm {
+  flex: none;
+  width: auto;
+  padding: 5px 14px;
+  font-size: 12px;
+}
+
+.full-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 13px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  color: #475569;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.full-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 12px 0;
+}
+
+/* --- Verify page --- */
+
+.verify-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.verify-page h1 {
+  margin-bottom: 4px;
+}
+
+.verify-controls {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.verify-controls .section {
+  margin-bottom: 0;
+}
+
+.verify-controls select {
+  min-width: 220px;
+}
+
+.verify-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.verify-actions button {
+  flex: none;
+  width: auto;
+  padding: 7px 20px;
+}
+
+.results-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.results-toolbar .count-info {
+  flex: 1;
+  margin: 0;
+}
+
+.progress-found {
+  color: #b45309;
+  font-weight: 500;
+}
+
+.result-redirect-url {
+  font-size: 10px;
+  color: #b45309;
+  text-decoration: none;
+}
+
+.result-redirect-url:hover {
+  text-decoration: underline;
+}
+
+/* --- Checkbox options --- */
+
+.check-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.check-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 400;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.check-label input[type="checkbox"] {
+  margin: 0;
+}
+
+/* --- Progress bar --- */
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #e5e5e5;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #3b82f6;
+  border-radius: 3px;
+  transition: width 0.2s;
+  width: 0;
+}
+
+.progress-text {
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+}
+
+/* --- Scan results --- */
+
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.result-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.result-row input[type="checkbox"] {
+  margin-top: 3px;
+  flex: none;
+}
+
+.result-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.result-title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.result-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+}
+
+a.result-url {
+  font-size: 10px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+}
+
+a.result-url:hover {
+  color: #3b82f6;
+  text-decoration: underline;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.badge-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.badge-warn {
+  background: #fef9ee;
+  color: #b45309;
 }
 
 /* --- Preview --- */

@@ -1,17 +1,21 @@
-# Bookmark Organizer by Type
+# Bookmark Organizer
 
-Chrome extension that organizes your bookmarks within a folder by type — documents, videos, repositories, design tools, and more.
+Chrome extension to organize, sort, and verify your bookmarks. Categorize by type, detect broken links, and clean up redirections.
 
 ## Features
 
-### Two organization modes
+### Organize by type
 
-- **Sort in place** — Reorders bookmarks within the same folder, grouping them by type. No subfolders are created. For example: `docA, video1, docB` becomes `docA, docB, video1`.
+Two modes for sorting bookmarks within a folder:
+
+- **Sort in place** — Reorders bookmarks grouping them by type without creating subfolders. For example: `docA, video1, docB` becomes `docA, docB, video1`.
 - **Group into subfolders** — Creates subfolders by type (Documents, Videos, Repos, etc.) and moves bookmarks into them.
+
+Existing subfolders are always moved to the top, preserving their original order.
 
 ### Smart categorization
 
-Bookmarks are classified by URL patterns into categories like:
+Bookmarks are classified by URL patterns into built-in categories:
 
 | Category | Example sites |
 |---|---|
@@ -32,21 +36,28 @@ Bookmarks are classified by URL patterns into categories like:
 
 When a URL matches multiple categories, the **most specific pattern wins** — so `docs.google.com/spreadsheets` is always classified as Spreadsheets, not Documents.
 
-### Folder handling
-
-Existing subfolders within the selected folder are moved to the top while preserving their original order. Bookmarks are then sorted below them.
-
 ### Custom categories
 
-From the settings page you can:
+From the settings page (gear icon) you can:
 
 - **Add** new categories with custom name and URL patterns (plain text or regex)
-- **Edit** any existing category, including the defaults
-- **Delete** categories you don't need
+- **Edit** or **delete** any category, including the defaults
 - **Drag and drop** to reorder display priority
 - **Choose sorting within groups** — alphabetical (A-Z) or keep original order
 
-Display order and matching priority are independent, so reordering categories for display never breaks the classification logic.
+Display order and matching priority are independent, so reordering categories never breaks the classification logic.
+
+### Verify links
+
+Opens in a dedicated tab so results persist even if you navigate away. Features:
+
+- **Detect broken links** — finds bookmarks returning 404, 410, or connection errors
+- **Detect redirections** — finds bookmarks returning 301/302 with the destination URL
+- **Selective deletion** — check individual bookmarks or select all, then delete in bulk
+- **Clickable URLs** — click any URL in the results to verify it manually in a new tab
+- **Progress bar** with live counter of issues found
+- **Stop button** to cancel a scan in progress
+- Requests that return 403 (authentication required) are excluded from results since the resource likely exists but requires login
 
 ## Installation
 
@@ -58,18 +69,27 @@ Display order and matching priority are independent, so reordering categories fo
 
 ## Usage
 
+### Organizing
+
 1. Click the extension icon in the toolbar
 2. Select a bookmark folder from the dropdown
 3. Choose a mode: **Sort in place** or **Group into subfolders**
 4. Click **Preview** to see how bookmarks will be organized
 5. Click **Apply** to execute
 
-To configure category order or add custom categories, click the gear icon to open the settings page.
+### Verifying
+
+1. Click **"Verify broken links and redirections"** at the bottom of the popup
+2. A new tab opens with the verification tool
+3. Select a folder and check which types to scan (404, redirections, or both)
+4. Click **Scan** and wait for results
+5. Review, click URLs to verify manually, then select and delete the ones you want to remove
 
 ## Permissions
 
-- `bookmarks` — Read and reorganize bookmarks
+- `bookmarks` — Read, move, and delete bookmarks
 - `storage` — Save category configuration and preferences
+- `host_permissions: <all_urls>` — Required to check bookmark URLs for broken links and redirections
 
 ## Tech
 

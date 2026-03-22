@@ -14,6 +14,7 @@ const categoryList = document.getElementById("category-list");
 const totalCount = document.getElementById("total-count");
 const statusDiv = document.getElementById("status");
 const settingsBtn = document.getElementById("settings-btn");
+const verifyBtn = document.getElementById("verify-btn");
 const modeBtns = document.querySelectorAll(".mode-btn");
 
 // --- Bookmark helpers ---
@@ -57,6 +58,9 @@ async function init() {
   settingsBtn.addEventListener("click", () => {
     chrome.tabs.create({ url: "settings.html" });
   });
+  verifyBtn.addEventListener("click", () => {
+    chrome.tabs.create({ url: "verify.html" });
+  });
 
   modeBtns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -76,7 +80,7 @@ function resetPreview() {
   statusDiv.classList.add("hidden");
 }
 
-// --- Group bookmarks by category respecting order ---
+// --- Group bookmarks ---
 
 function groupBookmarks(bookmarks) {
   const groups = {};
@@ -109,7 +113,6 @@ async function showPreview() {
 
   currentGroups = groupBookmarks(bookmarks);
 
-  // Sort within each group
   for (const catId of Object.keys(currentGroups)) {
     if (sortWithin === "alpha") {
       currentGroups[catId].sort((a, b) =>
@@ -119,19 +122,15 @@ async function showPreview() {
   }
 
   const sortedIds = getSortedCategoryIds(currentGroups);
-
   categoryList.innerHTML = "";
 
-  // Show folders first (original order)
   if (currentFolders.length > 0) {
     const div = document.createElement("div");
     div.className = "category";
-
     const header = document.createElement("div");
     header.className = "category-header category-header-folders";
     header.textContent = `Carpetas (${currentFolders.length}) \u2014 se mantienen al inicio`;
     div.appendChild(header);
-
     const ul = document.createElement("ul");
     for (const f of currentFolders) {
       const li = document.createElement("li");
@@ -145,17 +144,13 @@ async function showPreview() {
   for (const catId of sortedIds) {
     const items = currentGroups[catId];
     const catName = getCategoryName(catId, categories);
-
     const div = document.createElement("div");
     div.className = "category";
-
     const header = document.createElement("div");
     header.className = "category-header";
-    const modeLabel =
-      currentMode === "group" ? " \u2192 subcarpeta" : "";
+    const modeLabel = currentMode === "group" ? " \u2192 subcarpeta" : "";
     header.textContent = `${catName} (${items.length})${modeLabel}`;
     div.appendChild(header);
-
     const ul = document.createElement("ul");
     for (const bm of items) {
       const li = document.createElement("li");
@@ -180,76 +175,51 @@ async function organize() {
 
   organizeBtn.disabled = true;
   previewBtn.disabled = true;
-  showStatus("Organizando...", "info");
+  showMsg(statusDiv, "Organizando...", "info");
 
   try {
     if (currentMode === "group") {
-      await organizeIntoSubfolders(folderId);
+      for (const folder of currentFolders) {
+        await chrome.bookmarks.move(folder.id, { parentId: folderId });
+      }
+      const sortedIds = getSortedCategoryIds(currentGroups);
+      for (const catId of sortedIds) {
+        const bookmarks = currentGroups[catId];
+        const catName = getCategoryName(catId, categories);
+        const subfolder = await chrome.bookmarks.create({ parentId: folderId, title: catName });
+        for (const bm of bookmarks) {
+          await chrome.bookmarks.move(bm.id, { parentId: subfolder.id });
+        }
+      }
     } else {
-      await sortInPlace(folderId);
+      for (const folder of currentFolders) {
+        await chrome.bookmarks.move(folder.id, { parentId: folderId });
+      }
+      const sortedIds = getSortedCategoryIds(currentGroups);
+      for (const catId of sortedIds) {
+        for (const bm of currentGroups[catId]) {
+          await chrome.bookmarks.move(bm.id, { parentId: folderId });
+        }
+      }
     }
 
     const catCount = Object.keys(currentGroups).length;
     const bmCount = Object.values(currentGroups).flat().length;
-    const modeText =
-      currentMode === "group"
-        ? `en ${catCount} subcarpetas`
-        : `por ${catCount} tipos`;
-    showStatus(`Listo: ${bmCount} marcadores organizados ${modeText}.`, "success");
+    const modeText = currentMode === "group" ? `en ${catCount} subcarpetas` : `por ${catCount} tipos`;
+    showMsg(statusDiv, `Listo: ${bmCount} marcadores organizados ${modeText}.`, "success");
     currentGroups = {};
     organizeBtn.disabled = true;
   } catch (err) {
-    showStatus(`Error: ${err.message}`, "error");
+    showMsg(statusDiv, `Error: ${err.message}`, "error");
     organizeBtn.disabled = false;
   }
-
   previewBtn.disabled = false;
 }
 
-async function organizeIntoSubfolders(folderId) {
-  // 1. Move existing folders to the top first (original order)
-  for (const folder of currentFolders) {
-    await chrome.bookmarks.move(folder.id, { parentId: folderId });
-  }
-
-  // 2. Create type subfolders and move bookmarks
-  const sortedIds = getSortedCategoryIds(currentGroups);
-  for (const catId of sortedIds) {
-    const bookmarks = currentGroups[catId];
-    const catName = getCategoryName(catId, categories);
-
-    const subfolder = await chrome.bookmarks.create({
-      parentId: folderId,
-      title: catName,
-    });
-
-    for (const bm of bookmarks) {
-      await chrome.bookmarks.move(bm.id, { parentId: subfolder.id });
-    }
-  }
-}
-
-async function sortInPlace(folderId) {
-  // 1. Folders first, in their original order
-  for (const folder of currentFolders) {
-    await chrome.bookmarks.move(folder.id, { parentId: folderId });
-  }
-
-  // 2. Then bookmarks grouped by type in configured order
-  const sortedIds = getSortedCategoryIds(currentGroups);
-  for (const catId of sortedIds) {
-    for (const bm of currentGroups[catId]) {
-      await chrome.bookmarks.move(bm.id, { parentId: folderId });
-    }
-  }
-}
-
-// --- Util ---
-
-function showStatus(msg, type) {
-  statusDiv.textContent = msg;
-  statusDiv.className = `status-${type}`;
-  statusDiv.classList.remove("hidden");
+function showMsg(el, msg, type) {
+  el.textContent = msg;
+  el.className = `status-${type}`;
+  el.classList.remove("hidden");
 }
 
 init();

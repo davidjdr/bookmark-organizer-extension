@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Bookmark Organizer - Verificar enlaces</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="verify-page">
+    <h1>Verificar enlaces</h1>
+    <p class="hint">Escanea los marcadores de una carpeta para detectar enlaces rotos o redirecciones.</p>
+
+    <div class="verify-controls">
+      <div class="section">
+        <label for="v-folder-select">Carpeta:</label>
+        <select id="v-folder-select">
+          <option value="">-- Cargando carpetas --</option>
+        </select>
+      </div>
+
+      <div class="section">
+        <label>Buscar:</label>
+        <div class="check-options">
+          <label class="check-label">
+            <input type="checkbox" id="check-404" checked>
+            Enlaces rotos (404, 410, errores)
+          </label>
+          <label class="check-label">
+            <input type="checkbox" id="check-redirect" checked>
+            Redirecciones (301/302)
+          </label>
+        </div>
+      </div>
+
+      <div class="verify-actions">
+        <button id="scan-btn" class="primary" disabled>Escanear</button>
+        <button id="stop-btn" class="hidden">Detener</button>
+      </div>
+    </div>
+
+    <div id="scan-progress" class="hidden">
+      <div class="progress-bar">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p class="progress-text">
+        <span id="progress-current">0</span> / <span id="progress-total">0</span>
+        <span id="progress-found" class="progress-found"></span>
+      </p>
+    </div>
+
+    <div id="scan-results" class="hidden">
+      <div class="results-toolbar">
+        <label class="check-label">
+          <input type="checkbox" id="select-all">
+          Seleccionar todos
+        </label>
+        <span id="results-count" class="count-info"></span>
+        <button id="delete-selected-btn" class="danger btn-sm" disabled>Eliminar seleccionados</button>
+      </div>
+
+      <div id="results-list"></div>
+    </div>
+
+    <div id="verify-status" class="hidden"></div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="verify.js"></script>
+</body>
+</html>
